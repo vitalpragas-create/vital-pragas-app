@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card border-0 rounded-4 shadow-sm">
+      <div class="card-header bg-white rounded-top-4"><strong>Entrega de equipamento</strong></div>
+      <div class="card-body">
+        <form method="post" class="vstack gap-3">
+          <select class="form-select" name="equipment_id" required><option value="">Equipamento</option>{% for e in equipment_items %}<option value="{{ e.id }}">{{ e.description }}</option>{% endfor %}</select>
+          <select class="form-select" name="employee_id" required><option value="">Funcionário</option>{% for e in employees %}<option value="{{ e.id }}">{{ e.full_name }}</option>{% endfor %}</select>
+          <input class="form-control" type="date" name="delivery_date" required>
+          <input class="form-control" type="date" name="expected_return_date">
+          <input class="form-control" type="date" name="return_date">
+          <input class="form-control" name="delivery_condition" placeholder="Condição na entrega">
+          <input class="form-control" name="return_condition" placeholder="Condição na devolução">
+          <select class="form-select" name="status"><option>Entregue</option><option>Devolvido</option></select>
+          <textarea class="form-control" name="notes" placeholder="Observações"></textarea>
+          <div>
+            <label class="form-label">Assinatura digital</label>
+            <canvas class="signature-pad" width="320" height="160"></canvas>
+            <input type="hidden" name="signature_data" class="signature-data">
+            <button type="button" class="btn btn-sm btn-outline-secondary mt-2 clear-signature">Limpar assinatura</button>
+          </div>
+          <button class="btn btn-dark">Salvar entrega</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card border-0 rounded-4 shadow-sm">
+      <div class="card-header bg-white rounded-top-4"><strong>Histórico de entregas</strong></div>
+      <div class="card-body table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Equipamento</th><th>Funcionário</th><th>Entrega</th><th>Prev. devolução</th><th>Status</th><th>Assinatura</th></tr></thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td>{{ item.equipment.description }}</td><td>{{ item.employee.full_name }}</td><td>{{ item.delivery_date.strftime('%d/%m/%Y') }}</td><td>{{ item.expected_return_date.strftime('%d/%m/%Y') if item.expected_return_date else '-' }}</td><td>{{ item.status }}</td>
+              <td>{% if item.signature_data %}<a href="{{ url_for('signature', kind='assignment', item_id=item.id) }}" class="btn btn-sm btn-outline-dark">Ver</a>{% else %}-{% endif %}</td>
+            </tr>
+            {% else %}<tr><td colspan="6" class="text-muted">Sem entregas.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

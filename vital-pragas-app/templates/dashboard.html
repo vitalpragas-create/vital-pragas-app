@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+  <div>
+    <h1 class="h3 fw-bold mb-1">Dashboard</h1>
+    <div class="text-muted">Visão geral do estoque, equipe e patrimônio</div>
+  </div>
+  <button onclick="window.print()" class="btn btn-outline-dark"><i class="bi bi-printer me-2"></i>Imprimir</button>
+</div>
+<div class="row g-4 mb-4">
+  <div class="col-md-3"><div class="metric-card"><div class="metric-label">Produtos</div><div class="metric-value">{{ total_products }}</div></div></div>
+  <div class="col-md-3"><div class="metric-card"><div class="metric-label">Estoque baixo</div><div class="metric-value">{{ low_stock }}</div></div></div>
+  <div class="col-md-3"><div class="metric-card"><div class="metric-label">Funcionários</div><div class="metric-value">{{ total_employees }}</div></div></div>
+  <div class="col-md-3"><div class="metric-card"><div class="metric-label">Equipamentos em uso</div><div class="metric-value">{{ equipment_in_use }}</div></div></div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-header bg-white rounded-top-4"><strong>Últimas movimentações</strong></div>
+      <div class="card-body table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Data</th><th>Tipo</th><th>Produto</th><th>Qtd.</th><th>Funcionário</th></tr></thead>
+          <tbody>
+            {% for item in recent_movements %}
+            <tr>
+              <td>{{ item.movement_date.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td><span class="badge text-bg-secondary">{{ item.movement_type }}</span></td>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.employee.full_name if item.employee else '-' }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="text-muted">Nenhuma movimentação registrada.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+      <div class="card-header bg-white rounded-top-4"><strong>Produtos vencendo</strong></div>
+      <div class="card-body">
+        {% for item in expiring_products %}
+        <div class="d-flex justify-content-between border-bottom py-2"><span>{{ item.name }}</span><span>{{ item.expiry_date.strftime('%d/%m/%Y') if item.expiry_date else '-' }}</span></div>
+        {% else %}<div class="text-muted">Sem dados.</div>{% endfor %}
+      </div>
+    </div>
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-header bg-white rounded-top-4"><strong>Próximas manutenções</strong></div>
+      <div class="card-body">
+        {% for item in upcoming_maintenance %}
+        <div class="d-flex justify-content-between border-bottom py-2"><span>{{ item.equipment.description }}</span><span>{{ item.next_maintenance_date.strftime('%d/%m/%Y') if item.next_maintenance_date else '-' }}</span></div>
+        {% else %}<div class="text-muted">Sem dados.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 fw-bold mb-1">Relatórios</h1>
+    <div class="text-muted">Use a impressão do navegador para salvar em PDF ou papel</div>
+  </div>
+  <button onclick="window.print()" class="btn btn-dark">Imprimir</button>
+</div>
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white"><strong>Estoque atual</strong></div><div class="card-body table-responsive"><table class="table"><thead><tr><th>Produto</th><th>Qtd.</th><th>Mín.</th></tr></thead><tbody>{% for p in products %}<tr><td>{{ p.name }}</td><td>{{ p.quantity }} {{ p.unit }}</td><td>{{ p.minimum_stock }}</td></tr>{% endfor %}</tbody></table></div></div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white"><strong>Movimentações</strong></div><div class="card-body table-responsive"><table class="table"><thead><tr><th>Data</th><th>Tipo</th><th>Produto</th><th>Qtd.</th></tr></thead><tbody>{% for m in movements %}<tr><td>{{ m.movement_date.strftime('%d/%m/%Y') }}</td><td>{{ m.movement_type }}</td><td>{{ m.product.name }}</td><td>{{ m.quantity }}</td></tr>{% endfor %}</tbody></table></div></div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white"><strong>Equipamentos por funcionário</strong></div><div class="card-body table-responsive"><table class="table"><thead><tr><th>Equipamento</th><th>Funcionário</th><th>Status</th></tr></thead><tbody>{% for a in assignments %}<tr><td>{{ a.equipment.description }}</td><td>{{ a.employee.full_name }}</td><td>{{ a.status }}</td></tr>{% endfor %}</tbody></table></div></div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 rounded-4 shadow-sm"><div class="card-header bg-white"><strong>Manutenções</strong></div><div class="card-body table-responsive"><table class="table"><thead><tr><th>Equipamento</th><th>Data</th><th>Tipo</th></tr></thead><tbody>{% for m in maintenance_items %}<tr><td>{{ m.equipment.description }}</td><td>{{ m.maintenance_date.strftime('%d/%m/%Y') }}</td><td>{{ m.maintenance_type }}</td></tr>{% endfor %}</tbody></table></div></div>
+  </div>
+</div>
+{% endblock %}

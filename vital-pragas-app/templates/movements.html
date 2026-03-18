@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card border-0 rounded-4 shadow-sm">
+      <div class="card-header bg-white rounded-top-4"><strong>Nova movimentação</strong></div>
+      <div class="card-body">
+        <form method="post" class="vstack gap-3">
+          <select class="form-select" name="movement_type" required>
+            <option>Entrada</option><option>Saída</option><option>Devolução</option><option>Ajuste</option><option>Perda</option><option>Avaria</option><option>Descarte</option>
+          </select>
+          <select class="form-select" name="product_id" required>
+            <option value="">Produto</option>
+            {% for p in products %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}
+          </select>
+          <select class="form-select" name="employee_id">
+            <option value="">Funcionário (opcional)</option>
+            {% for e in employees %}<option value="{{ e.id }}">{{ e.full_name }}</option>{% endfor %}
+          </select>
+          <input class="form-control" type="number" step="0.01" name="quantity" placeholder="Quantidade" required>
+          <input class="form-control" name="reason" placeholder="Motivo">
+          <input class="form-control" type="date" name="expected_return_date">
+          <input class="form-control" type="date" name="return_date">
+          <textarea class="form-control" name="notes" placeholder="Observações"></textarea>
+          <div>
+            <label class="form-label">Assinatura digital</label>
+            <canvas class="signature-pad" width="320" height="160"></canvas>
+            <input type="hidden" name="signature_data" class="signature-data">
+            <button type="button" class="btn btn-sm btn-outline-secondary mt-2 clear-signature">Limpar assinatura</button>
+          </div>
+          <button class="btn btn-dark">Salvar movimentação</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card border-0 rounded-4 shadow-sm">
+      <div class="card-header bg-white rounded-top-4"><strong>Histórico</strong></div>
+      <div class="card-body table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Data</th><th>Tipo</th><th>Produto</th><th>Qtd.</th><th>Funcionário</th><th>Assinatura</th></tr></thead>
+          <tbody>
+            {% for item in movements %}
+            <tr>
+              <td>{{ item.movement_date.strftime('%d/%m/%Y %H:%M') }}</td><td>{{ item.movement_type }}</td><td>{{ item.product.name }}</td><td>{{ item.quantity }}</td><td>{{ item.employee.full_name if item.employee else '-' }}</td>
+              <td>{% if item.signature_data %}<a href="{{ url_for('signature', kind='movement', item_id=item.id) }}" class="btn btn-sm btn-outline-dark">Ver</a>{% else %}-{% endif %}</td>
+            </tr>
+            {% else %}<tr><td colspan="6" class="text-muted">Sem movimentações.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
