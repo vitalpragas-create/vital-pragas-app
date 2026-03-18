@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card border-0 rounded-4 shadow-sm">
+      <div class="card-header bg-white rounded-top-4"><strong>Equipamentos</strong></div>
+      <div class="card-body table-responsive">
+        <table class="table align-middle">
+          <thead><tr><th>Tipo</th><th>Descrição</th><th>Marca</th><th>Modelo</th><th>Placa/ID</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for item in equipment_items %}
+            <tr><td>{{ item.equipment_type }}</td><td>{{ item.description }}</td><td>{{ item.brand }}</td><td>{{ item.model }}</td><td>{{ item.plate or item.serial_number }}</td><td>{{ item.status }}</td></tr>
+            {% else %}<tr><td colspan="6" class="text-muted">Sem equipamentos.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card border-0 rounded-4 shadow-sm">
+      <div class="card-header bg-white rounded-top-4"><strong>Novo equipamento</strong></div>
+      <div class="card-body">
+        <form method="post" class="vstack gap-3">
+          <input class="form-control" name="equipment_type" placeholder="Tipo" required>
+          <input class="form-control" name="description" placeholder="Descrição" required>
+          <div class="row g-2"><div class="col"><input class="form-control" name="brand" placeholder="Marca"></div><div class="col"><input class="form-control" name="model" placeholder="Modelo"></div></div>
+          <input class="form-control" name="serial_number" placeholder="Número de série / identificação">
+          <input class="form-control" name="plate" placeholder="Placa (se houver)">
+          <div class="row g-2"><div class="col"><input class="form-control" name="year" placeholder="Ano"></div><div class="col"><input class="form-control" type="date" name="purchase_date"></div></div>
+          <input class="form-control" name="purchase_place" placeholder="Local de compra">
+          <select class="form-select" name="status"><option>Disponível</option><option>Em uso</option><option>Manutenção</option><option>Baixado</option></select>
+          <textarea class="form-control" name="notes" placeholder="Observações"></textarea>
+          <button class="btn btn-dark">Salvar equipamento</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

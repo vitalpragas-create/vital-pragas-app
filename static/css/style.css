@@ -1,0 +1,12 @@
+body { font-size: 0.95rem; }
+.metric-card { background: white; border-radius: 1.25rem; padding: 1.25rem; box-shadow: 0 0.125rem 0.5rem rgba(0,0,0,.06); }
+.metric-label { color: #6c757d; font-size: .9rem; }
+.metric-value { font-size: 2rem; font-weight: 700; margin-top: .5rem; }
+.login-page { min-height: 100vh; background: linear-gradient(135deg, #e9ecef, #f8f9fa); }
+.login-card { width: 100%; max-width: 420px; }
+.signature-pad { width: 100%; border: 1px dashed #adb5bd; border-radius: 1rem; background: #fff; touch-action: none; }
+@media print {
+  nav, .btn, form, .alert { display: none !important; }
+  body, .card { background: #fff !important; box-shadow: none !important; }
+  main { padding: 0 !important; }
+}
